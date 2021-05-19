@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "nuxt build",
+    "start": "nuxt start"
   },
   "repository": {
     "type": "git",
@@ -15,5 +17,10 @@
   "bugs": {
     "url": "https://github.com/KenshiHashiguchin/NFT/issues"
   },
-  "homepage": "https://github.com/KenshiHashiguchin/NFT#readme"
+  "homepage": "https://github.com/KenshiHashiguchin/NFT#readme",
+  "dependencies": {
+    "db-migrate": "^0.11.12",
+    "db-migrate-mysql": "^2.1.2",
+    "nuxt": "^2.15.6"
+  }
 }
