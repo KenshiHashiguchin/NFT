@@ -1,0 +1,16 @@
+@media (min-width: 766px) {
+  .sp {
+    display: none;
+  }
+}
+
+//SP
+@media (max-width:767px){
+  .pc {
+    display: none;
+  }
+  p, span {
+    font-size: 0.9rem;
+  }
+}
+
