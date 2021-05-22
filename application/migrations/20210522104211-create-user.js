@@ -27,6 +27,10 @@ module.exports = {
       tx_hash: {
         type: Sequelize.STRING
       },
+      link_message: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
