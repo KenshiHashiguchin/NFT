@@ -52,17 +52,4 @@
   export default {}
 </script>
 <style lang="scss" scoped>
-  /*.image-trim {*/
-  /*  object-fit: cover;*/
-  /*}*/
-
-  /*.top-art {*/
-  /*  .art-img {*/
-  /*    height: 300px;*/
-  /*  }*/
-  /*  img {*/
-  /*    height: 300px;*/
-
-  /*  }*/
-  /*}*/
 </style>

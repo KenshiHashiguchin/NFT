@@ -20,11 +20,21 @@
   },
   "homepage": "https://github.com/KenshiHashiguchin/NFT#readme",
   "dependencies": {
+    "@nuxtjs/auth": "^4.9.1",
+    "@nuxtjs/axios": "^5.13.4",
+    "@nuxtjs/moment": "^1.6.1",
+    "body-parser": "^1.19.0",
     "db-migrate": "^0.11.12",
     "db-migrate-mysql": "^2.1.2",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mysql2": "^2.2.5",
     "nuxt": "^2.15.6",
     "nuxt-clipboard2": "^0.2.1",
     "sass": "^1.28.0",
-    "sass-loader": "^10.0.5"
+    "sass-loader": "^10.0.5",
+    "sequelize": "^6.6.2",
+    "sequelize-cli": "^6.2.0",
+    "vue-js-modal": "^2.0.0-rc.6"
   }
 }

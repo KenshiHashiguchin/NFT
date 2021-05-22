@@ -5,9 +5,16 @@
         <img src="/header_logo.png" alt="Stream UI Kit" style="height: 65px;">
       </a>
       <div class="navbar-brand">
-        <a class="u-link" data-toggle="modal" href="#exampleModalCenter"><img class="" width="40" height="40"
-                                                                              src="/login.png" alt="login"></a>
-        <img class="" width="40" height="40" src="/logout.png" alt="logout">
+        <template v-if="$auth.loggedIn">
+          <a class="u-link">
+            <img width="40" height="40" src="/logout.png" alt="logout" @click="logout">
+          </a>
+        </template>
+        <template v-else>
+          <a class="u-link" data-toggle="modal" href="#exampleModalCenter">
+            <img class="" width="40" height="40" src="/login.png" alt="login">
+          </a>
+        </template>
       </div>
     </div>
     <div class="page-content">
@@ -26,55 +33,104 @@
           <img @click="onCopy" src="/copy.png">
         </div>
       </div>
+      <h2>ログイン状態:{{ $auth.loggedIn }}</h2>
+      <p>{{ $auth.user }}</p>
+      <p>{{ authUser.username }}</p>
 
       <div class="page-content-inner">
         <Nuxt/>
       </div>
     </div>
-
-    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-         aria-labelledby="exampleModalCenterTitle" style="display: none;" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered" role="document">
-        <div class="modal-content">
-          <div class="modal-body">
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">×</span>
-            </button>
-            <h5 class="text-center">ログイン</h5><br>
-            <div class="form-group mb-2">
-              <!--              <label for="defaultInput" class="u-font-size-90"></label>-->
-              <form class="form-signin">
-                <input type="text" name="username" class="form-control" placeholder="ユーザ名">
-                <input type="text" name="password" class="form-control" placeholder="パスワード">
-                <button type="button" class="btn btn-block btn-dark">ログインする</button>
+    <client-only>
+      <div class="modal" id="exampleModalCenter" tabindex="-1" role="dialog"
+           aria-labelledby="exampleModalCenterTitle" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+            <div class="modal-body">
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">×</span>
+              </button>
+              <h5 class="text-center">ログイン</h5><br>
+              <div class="form-group mb-2">
+                <form class="form-signin">
+                  <input v-model="login_username" type="text" name="username" class="form-control" placeholder="ユーザ名">
+                  <input v-model="login_password" type="password" name="password" class="form-control" placeholder="パスワード">
+                  <button type="button" class="btn btn-block btn-dark" @click="login">ログインする</button>
+                </form>
+              </div>
+              <br>
+              <hr>
+              <h5 class="text-center">新規登録</h5><br>
+              <form class="form-signin" @submit.prevent="register">
+                <input v-model="register_username" type="text" name="username" class="form-control" placeholder="ユーザ名">
+                <input v-model="register_password" type="text" name="password" class="form-control" placeholder="パスワード">
+                <input v-model="register_password_confirm" type="text" name="password_confirm" class="form-control"
+                       placeholder="パスワード">
+                <button type="button" class="btn btn-block btn-dark">登録する</button>
               </form>
             </div>
-            <br>
-            <hr>
-            <h5 class="text-center">新規登録</h5><br>
-            <form class="form-signin">
-              <input type="text" name="username" class="form-control" placeholder="ユーザ名">
-              <input type="text" name="password" class="form-control" placeholder="パスワード">
-              <input type="text" name="password_confirm" class="form-control" placeholder="パスワード">
-              <button type="button" class="btn btn-block btn-dark">登録する</button>
-            </form>
           </div>
         </div>
       </div>
-    </div>
+    </client-only>
   </div>
 </template>
 
 <script>
+  import { mapState } from 'vuex'
 
   export default {
     data() {
-      return {}
+      return {
+        login_username: '',
+        login_password: '',
+        register_username: '',
+        register_password: '',
+        register_password_confirm: '',
+
+        authUser: {
+          username: '',
+          address: '',
+        },
+      }
     },
     methods: {
       onCopy() {
         this.$copyText("Hello World")
         alert("コピーしました。")
+      },
+      show() {
+        this.$modal.show("modal-content");
+      },
+      async login() {
+        try {
+          await this.$auth.loginWith('local', {
+            data: {
+              username: this.login_username,
+              password: this.login_password
+            }
+          })
+          console.log("Success Login!")
+        } catch (e) {
+          this.error = true
+          console.log(e)
+        }
+      },
+      async logout() {
+        await this.$auth.logout();
+      },
+      registerUser(){
+        this.$axios.post('/api/register',this.user)
+          .then((response) => {
+            this.$auth.loginWith('local',{
+              data: this.user
+            })
+          })
+      },
+    },
+    mounted() {
+      if (this.$auth.loggedIn){
+        this.authUser.username = this.$auth.user.username
       }
     }
   }
