@@ -2,8 +2,9 @@ const express = require('express')
 const bodyParser = require('body-parser')
 const jwt = require("jsonwebtoken")
 const models = require("../models")
-const {check, validationResult} = require('express-validator');
-const bcrypt = require('bcrypt');
+const {check, validationResult} = require('express-validator')
+const bcrypt = require('bcrypt')
+const crypto = require("crypto");
 
 const app = express()
 app.use(express.json());
@@ -24,26 +25,30 @@ app.post('/authenticate', async function (req, res) {
   const users = await models.User.findOne({where: {name: username}})
     .then(function (user) {
       if (!user) {
-        res.status(422).json({
+        return res.status(422).json({
           errors: {login: "ユーザ名かパスワードが間違っています"}
         });
       } else {
         if (bcrypt.compareSync(password, user.password)) {
           const payload = {
             username: req.body.username,
+            linkMessage: user.link_message,
+            status: user.status,
+            address: user.address,
+            txHash: user.tx_hash,
           };
           const option = {
-            expiresIn: '61m'
+            expiresIn: '60m'
           }
           const token = jwt.sign(payload, SECRET_KEY, option);
           return res.json({token: token});
         }
       }
+    }).catch(function () {
+      return res.status(422).json({
+        errors: {login: "ユーザ名かパスワードが間違っています"}
+      });
     })
-  res.status(422).json({
-    errors: {login: "ユーザ名かパスワードが間違っています"}
-  });
-
 })
 
 app.get('/me', (req, res) => {
@@ -65,7 +70,7 @@ app.get('/me', (req, res) => {
       req.decoded = decoded;
     }
   });
-  res.json(req.decoded)
+  return res.json(req.decoded)
 })
 
 app.post('/register', [
@@ -91,10 +96,12 @@ app.post('/register', [
   const username = req.body.username
   const password = req.body.password
   const passwordConfirm = req.body.password_confirm
-  console.log(username)
   if (password != passwordConfirm) {
     return res.status(422).json({errors: {password: "パスワードが一致しません。"}})
   }
+
+  const buff = crypto.randomBytes(8);  // バイナリで8byteのランダムな値を生成
+  const hex  = buff.toString("hex");
 
   models.User.findOrCreate({
     where: {name: username},
@@ -102,6 +109,7 @@ app.post('/register', [
       name: username,
       password: bcrypt.hashSync(password, 15),
       status: 0,
+      link_message: hex,
       createdAt: new Date(),
       updatedAt: new Date()
     }

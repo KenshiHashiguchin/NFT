@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     status: DataTypes.INTEGER,
     address: DataTypes.STRING,
     tx_hash: DataTypes.STRING,
+    link_message: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'User',
