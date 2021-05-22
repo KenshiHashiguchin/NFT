@@ -54,19 +54,23 @@
               <div class="form-group mb-2">
                 <form class="form-signin">
                   <input v-model="login_username" type="text" name="username" class="form-control" placeholder="ユーザ名">
-                  <input v-model="login_password" type="password" name="password" class="form-control" placeholder="パスワード">
+                  <input v-model="login_password" type="password" name="password" class="form-control"
+                         placeholder="パスワード">
+                  <p v-if="this.error.login">{{error.login}}</p>
                   <button type="button" class="btn btn-block btn-dark" @click="login">ログインする</button>
                 </form>
               </div>
               <br>
               <hr>
               <h5 class="text-center">新規登録</h5><br>
-              <form class="form-signin" @submit.prevent="register">
+              <form class="form-signin" @submit.prevent="registerUser">
                 <input v-model="register_username" type="text" name="username" class="form-control" placeholder="ユーザ名">
+                <p v-if="this.error.username">{{error.username}}</p>
                 <input v-model="register_password" type="text" name="password" class="form-control" placeholder="パスワード">
                 <input v-model="register_password_confirm" type="text" name="password_confirm" class="form-control"
                        placeholder="パスワード">
-                <button type="button" class="btn btn-block btn-dark">登録する</button>
+                <p v-if="this.error.password">{{error.password}}</p>
+                <button type="button" class="btn btn-block btn-dark" @click="registerUser">登録する</button>
               </form>
             </div>
           </div>
@@ -77,7 +81,7 @@
 </template>
 
 <script>
-  import { mapState } from 'vuex'
+  import {mapState} from 'vuex'
 
   export default {
     data() {
@@ -87,6 +91,7 @@
         register_username: '',
         register_password: '',
         register_password_confirm: '',
+        error: {},
 
         authUser: {
           username: '',
@@ -110,7 +115,7 @@
               password: this.login_password
             }
           })
-          console.log("Success Login!")
+          this.$bvModal.hide("#exampleModalCenter")
         } catch (e) {
           this.error = true
           console.log(e)
@@ -119,17 +124,35 @@
       async logout() {
         await this.$auth.logout();
       },
-      registerUser(){
-        this.$axios.post('/api/register',this.user)
+      registerUser() {
+        var _this = this
+        this.$axios.post('/register', {
+            username: this.register_username,
+            password: this.register_password,
+            password_confirm: this.register_password_confirm
+        })
           .then((response) => {
-            this.$auth.loginWith('local',{
-              data: this.user
+            console.log("Success")
+            // alert(response)
+            this.$auth.loginWith('local', {
+              data: {
+                username: this.register_username,
+                password: this.register_password,
+              }
             })
+            this.$bvModal.hide("exampleModalCenter")
+          })
+          .catch(function (err){
+            console.log(err.response)
+            _this.error = err.response.data.errors
+            // this.error = err.response.data.errors
+            // console.log(this.error)
+            // console.log(this.error.password)
           })
       },
     },
     mounted() {
-      if (this.$auth.loggedIn){
+      if (this.$auth.loggedIn) {
         this.authUser.username = this.$auth.user.username
       }
     }
