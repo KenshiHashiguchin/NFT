@@ -97,7 +97,8 @@
           <br>
           <div class="link_address">
             <p><b>送信先アドレス</b></p>
-            <button type="button" class="btn btn-outline-danger" @click="onCopy($config.adminAddress)">
+            <button type="button" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="top" title=""
+                    data-original-title="Tooltip on top" @click="onCopy($config.adminAddress)">
               <span>{{ this.$config.adminAddress }}</span><img @click="onCopy($config.adminAddress)" src="/copy.png">
             </button>
             <br>
@@ -108,14 +109,26 @@
             </button>
           </div>
           <br>
-<!--          <div class="description">-->
+          <div class="description">
             <p>
-              アカウントと決済アドレスを紐付けます。<br>
-              本登録には、Symbolアカウントを確立するために、上記アドレスにトランザクションを送信する必要があります。<br>
+              アカウントと決済アドレスを紐付けるために、上記アドレスに送信メッセージを含めたトランザクションを送信する必要があります。<br>
               送信元のアドレスはユーザー名にリンクされ、すべてのNFTトランザクションが処理されます。<br>
               これは秘密鍵をインポートすることなく、またメールアドレスを使用することなく完全に分散化された登録手段です。<br>
             </p>
-<!--          </div>-->
+          </div>
+          <hr>
+          <div class="link_address">
+            <p><b>トランザクションが承認されたらアカウントを有効化してください</b></p>
+            <button type="button" class="btn btn-outline-dark" @click="linkAccout">
+              <span>有効化する</span>
+            </button>
+            <template v-if="linkInvalid">
+              <p class="text-danger">
+                有効なトランザクションが存在しませんでした。<br>
+                アドレスとメッセージが正しいか、トランザクションが承認されたか確認してください。
+              </p>
+            </template>
+          </div>
         </div>
       </Modal>
     </client-only>
@@ -145,6 +158,7 @@
         },
         authModal: false,
         linkModal: false,
+        linkInvalid: "",
       }
     },
     methods: {
@@ -188,13 +202,21 @@
               }
             }).then((response) => {
               this.authUser = this.$auth.user
-              // this.authUser.username = this.$auth.user.username
             })
             this.authModal = false
           })
           .catch(function (err) {
             console.log(err.response)
             _this.error = err.response.data.errors
+          })
+      },
+      async linkAccout() {
+        var _this = this
+        this.$axios.post('/link_account', {})
+          .then((response) => {
+          })
+          .catch(function (err) {
+            _this.linkInvalid = "アドレスと送信メッセージを確認してください。"
           })
       },
     },
@@ -218,6 +240,7 @@
 
   .form-signin {
     margin: 0 35px;
+
     input {
       margin-bottom: 15px;
     }
@@ -232,10 +255,6 @@
     max-width: 600px;
     padding-left: 30px;
     padding-right: 30px;
-
-    .description {
-      padding: 0 20px;
-    }
   }
 </style>
 

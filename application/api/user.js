@@ -38,7 +38,7 @@ app.post('/authenticate', async function (req, res) {
             txHash: user.tx_hash,
           };
           const option = {
-            expiresIn: '60m'
+            expiresIn: '14d'
           }
           const token = jwt.sign(payload, SECRET_KEY, option);
           return res.json({token: token});
