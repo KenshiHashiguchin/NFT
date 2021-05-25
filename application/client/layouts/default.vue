@@ -46,12 +46,6 @@
           </div>
         </div>
       </template>
-      <!--      <h2>ログイン状態:{{ $auth.loggedIn }}</h2>-->
-      <!--      <p>{{ $auth.user }}</p>-->
-      <!--      <p>{{ authUser.username }}</p>-->
-      <!--      <p>{{ authUser.linkMessage }}</p>-->
-      <!--      <p>{{ authUserState }}</p>-->
-
       <div class="page-content-inner">
         <Nuxt/>
       </div>
@@ -238,8 +232,8 @@
       if (this.$auth.loggedIn) {
         this.authUser = this.$auth.user
       }
-      this.getNft()
-
+      // this.getNft()
+      // console.log(nft)
     },
     created() {
       // this.getNft()
