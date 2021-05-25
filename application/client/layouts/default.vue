@@ -26,7 +26,7 @@
           <div class="col-lg-8 col-sm-12 col-xs-12 text-right pc">
             <template v-if="authUser.address">
               <span class="text-success"><b>Linked Address：</b></span><br>
-              <span class="address">TCRAU4XIUFZT5NG4MWL6YU4CEJTVFYRTBPV5RVY</span>
+              <span class="address">{{ authUser.address}}</span>
               <img @click="onCopy('')" src="/copy.png">
             </template>
             <template v-else>
@@ -37,7 +37,7 @@
           <div class="col-lg-8 col-sm-12 col-xs-12 sp">
             <template v-if="authUser.address">
               <span class="text-success"><b>Linked Address：</b></span>
-              <span class="address">TCRAU4XIUFZT5NG4MWL6YU4CEJTVFYRTBPV5RVY</span>
+              <span class="address">{{ authUser.address}}</span>
               <img @click="onCopy" src="/copy.png">
             </template>
             <template v-else>
@@ -46,10 +46,11 @@
           </div>
         </div>
       </template>
-      <h2>ログイン状態:{{ $auth.loggedIn }}</h2>
-      <p>{{ $auth.user }}</p>
-      <p>{{ authUser.username }}</p>
-      <p>{{ authUser.linkMessage }}</p>
+      <!--      <h2>ログイン状態:{{ $auth.loggedIn }}</h2>-->
+      <!--      <p>{{ $auth.user }}</p>-->
+      <!--      <p>{{ authUser.username }}</p>-->
+      <!--      <p>{{ authUser.linkMessage }}</p>-->
+      <!--      <p>{{ authUserState }}</p>-->
 
       <div class="page-content-inner">
         <Nuxt/>
@@ -114,6 +115,7 @@
               アカウントと決済アドレスを紐付けるために、上記アドレスに送信メッセージを含めたトランザクションを送信する必要があります。<br>
               送信元のアドレスはユーザー名にリンクされ、すべてのNFTトランザクションが処理されます。<br>
               これは秘密鍵をインポートすることなく、またメールアドレスを使用することなく完全に分散化された登録手段です。<br>
+              <span class="text-danger">※トランザクションを送信するにはSymbolウォレットが必要です。</span>
             </p>
           </div>
           <hr>
@@ -122,7 +124,7 @@
             <button type="button" class="btn btn-outline-dark" @click="linkAccout">
               <span>有効化する</span>
             </button>
-            <template v-if="linkInvalid">
+            <template v-if="linkFailed">
               <p class="text-danger">
                 有効なトランザクションが存在しませんでした。<br>
                 アドレスとメッセージが正しいか、トランザクションが承認されたか確認してください。
@@ -137,6 +139,7 @@
 
 <script>
   import Modal from '~/components/Modal.vue'
+  import {mapMutations} from 'vuex'
 
   export default {
     components: {Modal},
@@ -158,9 +161,11 @@
         },
         authModal: false,
         linkModal: false,
-        linkInvalid: "",
+        linkFailed: false,
+        nft: [],
       }
     },
+    computed: {},
     methods: {
       onCopy(val) {
         this.$copyText(val)
@@ -179,7 +184,7 @@
           this.authModal = false
         } catch (e) {
           this.error = true
-          console.log(e)
+          // console.log(e)
         }
       },
       async logout() {
@@ -193,8 +198,6 @@
           password_confirm: this.register_password_confirm
         })
           .then((response) => {
-            console.log("Success")
-            // alert(response)
             this.$auth.loginWith('local', {
               data: {
                 username: this.register_username,
@@ -206,24 +209,40 @@
             this.authModal = false
           })
           .catch(function (err) {
-            console.log(err.response)
             _this.error = err.response.data.errors
           })
       },
       async linkAccout() {
         var _this = this
-        this.$axios.post('/link_account', {})
+        this.$axios.get('/link_account', {})
           .then((response) => {
+            _this.$auth.fetchUser()
           })
           .catch(function (err) {
-            _this.linkInvalid = "アドレスと送信メッセージを確認してください。"
+            console.log(err)
+            _this.linkFailed = true
           })
       },
+      getNft() {
+        var _this = this
+        this.$axios.get('/nft', {})
+          .then((response) => {
+            console.log(response)
+          })
+          .catch(function (err) {
+            console.log(err)
+          })
+      }
     },
     mounted() {
       if (this.$auth.loggedIn) {
         this.authUser = this.$auth.user
       }
+      this.getNft()
+
+    },
+    created() {
+      // this.getNft()
     }
   }
 </script>

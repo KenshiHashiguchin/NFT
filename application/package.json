@@ -35,10 +35,13 @@
     "mysql2": "^2.2.5",
     "nuxt": "^2.15.6",
     "nuxt-clipboard2": "^0.2.1",
+    "rxjs": "^7.1.0",
     "sass": "^1.28.0",
     "sass-loader": "^10.0.5",
     "sequelize": "^6.6.2",
     "sequelize-cli": "^6.2.0",
+    "symbol-cli": "^1.0.0",
+    "symbol-sdk": "^1.0.0",
     "vue-js-modal": "^2.0.0-rc.6"
   }
 }

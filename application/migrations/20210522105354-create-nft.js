@@ -26,6 +26,10 @@ module.exports = {
       description: {
         type: Sequelize.STRING
       },
+      object_url: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
       hash: {
         type: Sequelize.STRING
       },

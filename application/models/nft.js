@@ -19,6 +19,7 @@ module.exports = (sequelize, DataTypes) => {
     token: DataTypes.STRING,
     title: DataTypes.STRING,
     description: DataTypes.STRING,
+    object_url: DataTypes.STRING,
     hash: DataTypes.STRING
   }, {
     sequelize,
