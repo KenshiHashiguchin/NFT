@@ -20,7 +20,8 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.STRING,
     description: DataTypes.STRING,
     object_url: DataTypes.STRING,
-    hash: DataTypes.STRING
+    hash: DataTypes.STRING,
+    min_amount: DataTypes.INTEGER,
   }, {
     sequelize,
     modelName: 'Nft',
