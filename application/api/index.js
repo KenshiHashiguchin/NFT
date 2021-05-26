@@ -8,5 +8,5 @@ module.exports = {
 }
 app.get('/', (req, res) => {
   // res.json({message: 'hello, api', hoge:'hogehoge', env: process.env.SECRET_KEY})
-  res.json({message: 'hello, api', hoge:'hogehoge'})
+  res.json({message: 'I\'m fine :)'})
 })

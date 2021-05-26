@@ -18,14 +18,14 @@
               <p class="text-left">{{ collection.description }}</p>
               <div class="form-group mb-2">
                 <label class="u-font-size-90 text-left"><b>送信メッセージ</b></label>
-                <textarea type="message" name="password" class="form-control mb-5"
+                <textarea v-model="message" type="message" name="password" class="form-control mb-5"
                           placeholder="メッセージを入力してください。"></textarea>
                 <div class="form-group mb-2">
                   <label class="u-font-size-90 text-left"><b>thanks量</b></label>
-                  <input type="text" name="volume" class="form-control mb-3" placeholder="500">
+                  <input v-model="amount" type="text" name="volume" class="form-control mb-3" placeholder="500">
                 </div>
-                <!--              <p v-if="this.error.login">{{error.login}}</p>-->
-                <button type="button" class="btn btn-block btn-dark mb-3" @click="login">購入する</button>
+                <p v-if="errors.amount">{{errors.amount}}</p>
+                <button type="button" class="btn btn-block btn-dark mb-3" @click="buy">購入する</button>
               </div>
             </div>
           </div>
@@ -42,6 +42,26 @@
       const collection = await app.$axios.$get('/nft/' + token)
       console.log(collection)
       return {collection}
+    },
+    data(){
+      return {
+        message : '',
+        amount: null,
+        errors: {},
+      }
+    },
+    methods: {
+      buy() {
+        var _this = this
+        this.$axios.post('/nft/' + this.token, {
+          message: this.message,
+          amount: this.amount
+        }).then((result) => {
+          _this.errors = {}
+        }).catch(function (err){
+          _this.errors = err.response.data.errors
+        })
+      }
     }
   }
 </script>

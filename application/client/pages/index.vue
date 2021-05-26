@@ -64,9 +64,8 @@
       return {
         //debug
         token: '78A1022CDE0F5059',
-        // collection: [],
       }
-    }
+    },
   }
 </script>
 <style lang="scss" scoped>

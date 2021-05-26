@@ -9,8 +9,7 @@ Object.defineProperty(exports, '__esModule', {value: true});
 const operators_1 = require('rxjs/operators');
 const symbol_sdk_1 = require('symbol-sdk');
 const networkType = symbol_sdk_1.NetworkType.TEST_NET;
-// replace with node endpoint
-const nodeUrl = 'http://ngl-dual-101.testnet.symboldev.network:3000';
+const nodeUrl = process.env.SYMBOL_NODE_URL;
 const repositoryFactory = new symbol_sdk_1.RepositoryFactoryHttp(nodeUrl);
 const transactionHttp = repositoryFactory.createTransactionRepository();
 
@@ -42,6 +41,8 @@ app.post('/authenticate', async function (req, res) {
         });
       } else {
         if (bcrypt.compareSync(password, user.password)) {
+          console.log(user)
+          console.log(user.link_message)
           const payload = {
             username: req.body.username,
             linkMessage: user.link_message,
@@ -86,7 +87,6 @@ app.post('/register', [
   if (!errors.isEmpty()) { // バリデーション失敗
     var err = {}
     errors.array().forEach(function (item) {
-      console.log(item)
       if (item.param === 'password') {
         err.password = item.msg
       } else if (item.param === 'username') {
@@ -204,7 +204,7 @@ async function getAuthUser(req) {
       return false
     }
     res.username = user.name
-    res.linkMessage = user.linkMessage
+    res.linkMessage = user.link_message
     res.address = user.address
     res.status = user.status
     res.txHash = user.tx_hash
@@ -216,24 +216,4 @@ async function getAuthUser(req) {
 }
 
 
-// // replace with transaction hash
-// const transactionHash =
-//   '3F5361B98424A8EEC31A7C213039B9D8AB632C4433976ECE372BED764E99E828';
-// transactionHttp
-//   .getTransaction(transactionHash, symbol_sdk_1.TransactionGroup.Confirmed)
-//   .pipe(operators_1.map((x) => x))
-//   .subscribe(
-//     (transaction) => {
-//       console.log(transaction.message.payload);
-//       // console.log(
-//       //     'Message: ',
-//       //     certificateAccount.decryptMessage(
-//       //         transaction.message,
-//       //         alicePublicAccount,
-//       //     ).payload,
-//       // );
-//     },
-//     (err) => console.log(err),
-//   );
-// /* end block 01 */
 

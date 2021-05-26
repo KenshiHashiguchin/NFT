@@ -217,30 +217,14 @@
             _this.linkFailed = true
           })
       },
-      getNft() {
-        var _this = this
-        this.$axios.get('/nft', {})
-          .then((response) => {
-            console.log(response)
-          })
-          .catch(function (err) {
-            console.log(err)
-          })
-      }
     },
     mounted() {
       if (this.$auth.loggedIn) {
         this.authUser = this.$auth.user
       }
-      // this.getNft()
-      // console.log(nft)
     },
-    created() {
-      // this.getNft()
-    }
   }
 </script>
-
 <style lang="scss" scoped>
   .logo {
     margin-right: calc(100% - 236px - 60px - 60px); //画像文と両脇のマージン分
