@@ -67,6 +67,7 @@ app.get('/nft/:token', function (req, res) {
 app.post('/nft/:token', [
   check('amount').isInt({min: 0}).withMessage('1以上の数値を入力してください。')
 ],async function (req, res) {
+  const token = req.params.token
   //validation
   const errors = validationResult(req);
   if (!errors.isEmpty()) { // バリデーション失敗
@@ -96,7 +97,22 @@ app.post('/nft/:token', [
         return res.status(422).json({errors: {amount: "残高不足です。（現在の残高：" + balance + "）"}})
       }
 
-      return res.status(200).json()
+      //nft
+      models.Nft.findOne({where: {token: token}}).then(function (nft) {
+        if(nft.min_amount && nft.min_amount > req.body.amount){
+          return res.status(422).json({errors: {amount: nft.min_amount+"thanks以上必要です。"}})
+        }
+
+        // アグリゲートボンデッド作成
+
+
+
+
+        return res.status(200).json(nft)
+      }).catch(function (err) {
+        console.log(err)
+        return res.status(404).json({errors: {}})
+      })
     },
     (err) => {
       console.error(err)
