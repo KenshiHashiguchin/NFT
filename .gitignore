@@ -1,0 +1,10 @@
+application/node_modules
+.idea/
+./.env
+.env
+env
+application/.env
+application/database.json
+application/api/test/.env
+application/config/config.json
+memo/
