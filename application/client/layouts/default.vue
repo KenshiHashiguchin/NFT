@@ -211,6 +211,7 @@
         this.$axios.get('/link_account', {})
           .then((response) => {
             _this.$auth.fetchUser()
+            _this.linkFailed = false
           })
           .catch(function (err) {
             console.log(err)
