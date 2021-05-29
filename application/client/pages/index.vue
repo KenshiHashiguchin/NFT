@@ -7,29 +7,17 @@
       </header>
 
       <div class="row">
-        <div class="art-img col-lg-4 col-sm-6 col-md-4 text-center mb-7 mb-md-5">
-          <nuxt-link v-bind:to="{name:'collection-token',params:{token:token}}">
-            <img class="u-box-shadow-lg img-fluid img-thumbnail mt-1 image-trim" src="/aikawa_1.JPG" alt="Htmlstream">
-            <span class="text-right"><span class="badge badge-info">500thanks ~</span></span>
-            <p>Title</p>
+        <div v-for="collection in collections" class="art-img col-lg-4 col-sm-6 col-md-4 text-center mb-7 mb-md-5">
+          <nuxt-link v-bind:to="{name:'collection-token',params:{token:collection.token}}">
+            <img class="u-box-shadow-lg img-fluid img-thumbnail mt-1 image-trim" :src="collection.object_url" alt="Htmlstream">
+            <span class="text-right"><span class="badge badge-dark">{{ collection.min_amount }}thanks ~</span></span>
+            <p>{{ collection.title }}</p>
           </nuxt-link>
         </div>
-        <div class="art-img col-lg-4 col-sm-6 col-md-4 text-center mb-7 mb-md-5">
-          <nuxt-link to="/about">
-            <img class="u-box-shadow-lg img-fluid img-thumbnail mt-1 image-trim" src="/aikawa_1.JPG" alt="Htmlstream">
-            <span class="text-right"><span class="badge badge-success">200thanks ~</span></span>
-            <p>Title</p>
-          </nuxt-link>
-        </div>
-
+        <h1>＝＝＝＝＝＝</h1>
         <div class="art-img col-lg-4 col-sm-6 col-md-4 text-center mb-7 mb-md-5">
           <img class="u-box-shadow-lg img-fluid img-thumbnail mt-1 image-trim" src="/aikawa_2.JPG" alt="Htmlstream">
           <p>@KenchakoDaibouken<br> bought for 600thanks</p>
-        </div>
-        <div class="art-img col-lg-4 col-sm-6 col-md-4 text-center mb-7 mb-md-5">
-          <img class="u-box-shadow-lg img-fluid img-thumbnail mt-1 image-trim" src="/aikawa_2.JPG" alt="Htmlstream">
-          <span class="text-right"><span class="badge badge-dark">1000thanks ~</span></span>
-          <p>Title</p>
         </div>
       </div>
     </div>
@@ -58,6 +46,7 @@
   export default {
     async asyncData({ app }) {
       const collections = await app.$axios.$get('/nft')
+      console.log(collections);
       return { collections }
     },
     data() {

@@ -3,7 +3,7 @@
     <div class="top-art">
       <div class="row">
         <div class="art-img col-lg-4 col-sm-6 col-md-4 text-center mb-7 mb-md-5">
-          <img class="u-box-shadow-lg img-fluid img-thumbnail mt-1 image-trim" src="/aikawa_1.JPG" alt="Htmlstream">
+          <img class="u-box-shadow-lg img-fluid img-thumbnail mt-1 image-trim" :src="collection.object_url" alt="Htmlstream">
           <span v-if="collection.min_amount" class="text-right"><span class="badge badge-info">{{ collection.min_amount }} thanks ~</span></span>
         </div>
         <div class="col-lg-8 col-sm-6 col-md-8 text-center mb-7 mb-md-5">
