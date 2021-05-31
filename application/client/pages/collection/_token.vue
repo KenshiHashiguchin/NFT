@@ -14,6 +14,10 @@
           </client-only>
           <span v-if="collection.min_amount" class="text-right"><span class="badge badge-info">{{ collection.min_amount }} thanks ~</span></span>
         </div>
+        <div v-if="collection.type == 3" class="art-img col-lg-4 col-sm-6 col-md-4 text-center mb-7 mb-md-5">
+          <h2>ファーストアルバム 前売り券</h2>
+          <span v-if="collection.min_amount" class="text-right"><span class="badge badge-info">{{ collection.min_amount }} thanks ~</span></span>
+        </div>
         <div class="col-lg-8 col-sm-6 col-md-8 text-center mb-7 mb-md-5">
           <div class="card">
             <div class="card-body">
@@ -26,7 +30,8 @@
                             placeholder="メッセージを入力してください。" disabled></textarea>
                   <div class="form-group mb-2">
                     <label class="u-font-size-90 text-left"><b>thanks量</b></label>
-                    <input v-model="amount" type="text" name="volume" class="form-control mb-3" placeholder="500" disabled>
+                    <input v-model="amount" type="text" name="volume" class="form-control mb-3" placeholder="500"
+                           disabled>
                   </div>
                 </template>
                 <template v-else-if="!successBuy">
@@ -45,18 +50,28 @@
                   <p>※他ユーザも購入手続きしている場合はよりthanks量の多い取引が優先される可能性がありますので、予めご了承ください。</p>
                 </div>
                 <p v-if="errors.amount">{{errors.amount}}</p>
-                <button v-if="!$auth.loggedIn" type="button" class="btn btn-block btn-dark mb-3" disabled>ログイン必須です</button>
-                <button v-else-if="!$auth.user.address" type="button" class="btn btn-block btn-dark mb-3" disabled>アドレス紐付け必須です</button>
-                <button v-else-if="successBuy" type="button" class="btn btn-block btn-dark mb-3" disabled>Success!!</button>
-                <button v-else-if="!successBuy" type="button" class="btn btn-block btn-dark mb-3" @click="buy">購入する</button>
+                <button v-if="!$auth.loggedIn" type="button" class="btn btn-block btn-dark mb-3" disabled>ログイン必須です
+                </button>
+                <button v-else-if="!$auth.user.address" type="button" class="btn btn-block btn-dark mb-3" disabled>
+                  アドレス紐付け必須です
+                </button>
+                <button v-else-if="successBuy" type="button" class="btn btn-block btn-dark mb-3" disabled>Success!!
+                </button>
+                <button v-else-if="!successBuy" type="button" class="btn btn-block btn-dark mb-3" @click="buy">購入する
+                </button>
               </div>
             </div>
           </div>
         </div>
       </div>
       <div class="row">
-        <div class="col-lg-12 col-sm-6 col-md-8 text-center mb-7 mb-md-5">
-          <p class="text-left">Owner Address：</p>
+        <div class="col-lg-6 col-sm-6 col-md-6 text-center mb-7 mb-md-5">
+          <p class="text-left">Owner：{{ownerId}}</p>
+        </div>
+        <div class="col-lg-6 col-sm-6 col-md-6 text-center mb-7 mb-md-5">
+          <p class="text-left">Historic</p>
+          <hr>
+          <p class="text-left">Comming Soon</p>
         </div>
       </div>
     </div>
@@ -87,6 +102,7 @@
           src: 'https://moeplayer.b0.upaiyun.com/aplayer/secretbase.mp3',
           pic: ''
         },
+        ownerId: '',
       }
     },
     methods: {
@@ -103,11 +119,18 @@
         }).catch(function (err) {
           _this.errors = err.response.data.errors
         })
+      },
+      getOwnerAddress() {
+        let transactions = this.$getOwnerAddress(this.collection.token)
+        if (!transactions){
+          this.ownerId = '@Aikawa'
+        }
       }
     },
     mounted() {
       this.music.src = this.collection.object_url
-    }
+      this.getOwnerAddress()
+    },
   }
 </script>
 <style lang="scss" scoped>

@@ -37,7 +37,8 @@ app.get('/nft', function (req, res) {
   models.Nft.findAll().then(function (nft) {
     var collections = nft.filter(item => item.type === 1)
     var music = nft.filter(item => item.type === 2)
-    return res.status(200).json({collections: collections, music: music})
+    var tickets = nft.filter(item => item.type === 3)
+    return res.status(200).json({collections: collections, music: music, tickets: tickets})
   }).catch(function () {
     return res.status(200).json()
   });
@@ -121,7 +122,6 @@ app.post('/nft/:token', [
             console.log("アグリゲートボンデッド作成")
             console.log(me.address)
             exchange.exchangeNft(token, accountInfo.publicKey, req.body.amount, req.body.message).then((result) => {
-              console.log("function帰ってきたよ")
               return res.status(200).json()
             }).catch((err) => {
               console.log(err)

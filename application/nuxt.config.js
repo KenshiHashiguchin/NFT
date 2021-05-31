@@ -12,9 +12,15 @@ export default {
     baseURL: process.env.BASE_URL || 'http://locahost:8080',
     browserBaseURL: process.env.BROWSER_BASE_URL,
     adminAddress: process.env.ADMIN_ADDRESS,
+    nodeURL : process.env.SYMBOL_NODE_URL,
   },
   privateRuntimeConfig: {
     secret: process.env.SECRET_KEY,
+  },
+  env: {
+    nodeURL : process.env.SYMBOL_NODE_URL,
+    EXCHANGE_CURRENCY_MOSAIC_ID: process.env.EXCHANGE_CURRENCY_MOSAIC_ID,
+    OWNER_ADDRESS: process.env.OWNER_ADDRESS,
   },
   srcDir: 'client/',
   render: {
@@ -84,6 +90,7 @@ export default {
   plugins: [
     { src: '~/plugins/vue-js-modal', ssr: false },
     { src: '~/plugins/VueLoading', ssr: false },
+    { src: '~/plugins/node-api', ssr: false },
     // { src: 'plugins/main.js'},
     // 'plugins/axios',
     // 'plugins/filter',

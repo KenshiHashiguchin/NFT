@@ -218,5 +218,9 @@ async function getAuthUser(req) {
 
 }
 
+app.get('/username_by_address', async function (req, res) {
+  return "hoge"
+})
+
 
 

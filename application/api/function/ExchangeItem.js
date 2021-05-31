@@ -26,7 +26,7 @@ exports.exchangeNft = async function (ownerMosaicId, purchaserPublicKey, amount,
   const adminAccount = symbol_sdk_1.Account.createFromPrivateKey(adminPrivateKey, networkType);
 
 // TODO 所有者の公開鍵
-  const ownerPublicKey = process.env.OWNER_ADDRESS;
+  const ownerPublicKey = process.env.OWNER_PUBLIC_KEY;
   const ownerPublicAccount = symbol_sdk_1.PublicAccount.createFromPublicKey(ownerPublicKey, networkType);
 
 // TODO Collection 交換するモザイクID
@@ -68,10 +68,25 @@ exports.exchangeNft = async function (ownerMosaicId, purchaserPublicKey, amount,
     networkType
   );
 
+  // Collection 所有者 -> 購入者
+  const adminToAdminTx = symbol_sdk_1.TransferTransaction.create(
+    symbol_sdk_1.Deadline.create(epochAdjustment),
+    adminAccount.address,
+    [
+      new symbol_sdk_1.Mosaic(
+        networkCurrencyMosaicId,
+        symbol_sdk_1.UInt64.fromUint(0)
+      )
+    ],
+    symbol_sdk_1.PlainMessage.create('Aikawa NFT Market'),
+    networkType
+  );
+
   const aggregateTx = symbol_sdk_1.AggregateTransaction.createBonded(
     symbol_sdk_1.Deadline.create(epochAdjustment, 48),
     // symbol_sdk_1.Deadline.create(epochAdjustment, 480),
     [
+      adminToAdminTx.toAggregate(adminAccount.publicAccount),
       purchaserToOwnerTx.toAggregate(purchaserPublicAccount),
       ownerToPurchaserTx.toAggregate(ownerPublicAccount)
     ],
