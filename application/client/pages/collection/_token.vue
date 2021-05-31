@@ -2,8 +2,16 @@
   <div class="">
     <div class="top-art">
       <div class="row">
-        <div class="art-img col-lg-4 col-sm-6 col-md-4 text-center mb-7 mb-md-5">
-          <img class="u-box-shadow-lg img-fluid img-thumbnail mt-1 image-trim" :src="collection.object_url" alt="Htmlstream">
+        <div v-if="collection.type == 1" class="art-img col-lg-4 col-sm-6 col-md-4 text-center mb-7 mb-md-5">
+          <img class="u-box-shadow-lg img-fluid img-thumbnail mt-1 image-trim" :src="collection.object_url"
+               alt="Htmlstream">
+          <span v-if="collection.min_amount" class="text-right"><span class="badge badge-info">{{ collection.min_amount }} thanks ~</span></span>
+        </div>
+        <div v-if="collection.type == 2" class="art-img col-lg-4 col-sm-6 col-md-4 text-center mb-7 mb-md-5">
+          <client-only>
+            <VueAplayer :music=music
+            ></VueAplayer>
+          </client-only>
           <span v-if="collection.min_amount" class="text-right"><span class="badge badge-info">{{ collection.min_amount }} thanks ~</span></span>
         </div>
         <div class="col-lg-8 col-sm-6 col-md-8 text-center mb-7 mb-md-5">
@@ -35,12 +43,20 @@
           </div>
         </div>
       </div>
+      <div class="row">
+        <div class="col-lg-12 col-sm-6 col-md-8 text-center mb-7 mb-md-5">
+          <p class="text-left">Owner Address：</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+  import VueAplayer from 'vue-aplayer';
+
   export default {
+    components: {VueAplayer},
     async asyncData({app, params}) {
       let token = params.token
       const collection = await app.$axios.$get('/nft/' + token)
@@ -54,6 +70,12 @@
         errors: {},
         successBuy: false,
         // successBuy: true,
+        music: {
+          title: '無題',
+          artist: '無題',
+          src: 'https://moeplayer.b0.upaiyun.com/aplayer/secretbase.mp3',
+          pic: ''
+        },
       }
     },
     methods: {
@@ -71,6 +93,9 @@
           _this.errors = err.response.data.errors
         })
       }
+    },
+    mounted() {
+      this.music.src = this.collection.object_url
     }
   }
 </script>

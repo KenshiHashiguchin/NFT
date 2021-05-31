@@ -26,7 +26,7 @@ module.exports = {
 }
 
 const SECRET_KEY = process.env.SECRET_KEY;
-const rawAdminAddress = "TDIRCB6ZQU7URLGB577PTP23OW2VHHGCDDW7UMA"
+const rawAdminAddress = process.env.ADMIN_ADDRESS
 const adminAddress = symbol_sdk_1.Address.createFromRawAddress(rawAdminAddress);
 
 
@@ -128,48 +128,51 @@ app.post('/register', [
 })
 
 app.get('/link_account', async function (req, res) {
-  var me = getAuthUser(req)
-  if (!me || !me.linkMessage) {
-    return res.status(412).json()
-  }
+  await getAuthUser(req).then((me) => {
+    if (!me || !me.linkMessage) {
+      console.log("!me || !me.linkMessage")
+      return res.status(412).json()
+    }
 
-  const linkMessage = me.linkMessage
+    const linkMessage = me.linkMessage
 
-  const searchCriteria = {
-    group: symbol_sdk_1.TransactionGroup.Confirmed,
-    address: adminAddress,
-    pageNumber: 1,
-    pageSize: 100,
-  };
-  var linkTx = {}
-  transactionHttp.search(searchCriteria).subscribe(
-    function (page) {
-      linkTx = page.data.find(function (value) {
-        if (value.type != transferType) {
-          return false
+    const searchCriteria = {
+      group: symbol_sdk_1.TransactionGroup.Confirmed,
+      address: adminAddress,
+      pageNumber: 1,
+      pageSize: 100,
+    };
+    var linkTx = {}
+    transactionHttp.search(searchCriteria).subscribe(
+      function (page) {
+        linkTx = page.data.find(function (value) {
+          if (value.type != transferType) {
+            return false
+          }
+          return value.message.payload === linkMessage
+        })
+
+        if (!linkTx) {
+          return res.status(412).json()
         }
-        return value.message.payload === linkMessage
-      })
 
-      if (!linkTx) {
-        return res.status(412).json()
-      }
-
-      // usersレコードにリンクアドレスいれる
-      models.User.update(
-        {status: 1, address: linkTx.signer.address.address, tx_hash: linkTx.transactionInfo.hash},
-        {where: {name: me.username, link_message: linkMessage}}
-      ).then(() => {
-        return res.status(200).json(linkTx)
-      }).catch(function (err) {
-        console.log(err)
-        return res.status(412).json({err: "更新エラー"})
-      });
-    },
-    function (err) {
-      return res.status(412).json(err)
-    },
-  )
+        // usersレコードにリンクアドレスいれる
+        models.User.update(
+          {status: 1, address: linkTx.signer.address.address, tx_hash: linkTx.transactionInfo.hash},
+          {where: {name: me.username, link_message: linkMessage}}
+        ).then(() => {
+          return res.status(200).json(linkTx)
+        }).catch(function (err) {
+          console.log(err)
+          return res.status(412).json({err: "更新エラー"})
+        });
+      },
+      function (err) {
+        return res.status(412).json(err)
+      },
+    )
+    }
+  ).catch((err) => {return res.status(412).json(err)})
 })
 
 

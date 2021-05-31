@@ -34,9 +34,9 @@ module.exports = {
  */
 app.get('/nft', function (req, res) {
   models.Nft.findAll().then(function (nft) {
-
-    //所有者情報取得
-    return res.status(200).json(nft)
+    var collections = nft.filter(item => item.type === 1)
+    var music = nft.filter(item => item.type === 2)
+    return res.status(200).json({collections: collections, music: music})
   }).catch(function () {
     return res.status(200).json()
   });
