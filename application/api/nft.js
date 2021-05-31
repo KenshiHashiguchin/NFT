@@ -11,6 +11,7 @@ const symbol_sdk_1 = require('symbol-sdk');
 const nodeUrl = process.env.SYMBOL_NODE_URL;
 const repositoryFactory = new symbol_sdk_1.RepositoryFactoryHttp(nodeUrl);
 const accountHttp = repositoryFactory.createAccountRepository();
+const exchangeMosaicId = process.env.EXCHANGE_CURRENCY_MOSAIC_ID;
 
 
 const app = express()
@@ -92,10 +93,12 @@ app.post('/nft/:token', [
 
   await accountHttp.getAccountInfo(address).subscribe(
     (accountInfo) => {
-      console.log(accountInfo.mosaics[0].amount.compact() / 1000000)
+      let mosaic = accountInfo.mosaics.find((item) => {
+        return item.id.toHex() === exchangeMosaicId
+      })
 
       //残高確認
-      let balance = accountInfo.mosaics[0].amount.compact() / 1000000
+      let balance = mosaic.amount.compact()
       if (balance < req.body.amount) {
         return res.status(422).json({errors: {amount: "残高不足です。（現在の残高：" + balance + "）"}})
       }
