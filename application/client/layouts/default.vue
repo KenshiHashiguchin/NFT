@@ -56,6 +56,7 @@
           <button type="button" class="close" @click="authModal=false">
             <span aria-hidden="true">×</span>
           </button>
+          <vue-loading v-if="isLoading" type="spin" color="#333" :size="{ width: '50px', height: '50px' }"></vue-loading>
           <h5 class="text-center">ログイン</h5><br>
           <div class="form-group mb-2">
             <form class="form-signin">
@@ -118,6 +119,7 @@
             <button type="button" class="btn btn-outline-dark" @click="linkAccout">
               <span>有効化する</span>
             </button>
+            <vue-loading v-if="isLoading" type="spin" color="#333" :size="{ width: '50px', height: '50px' }"></vue-loading>
             <template v-if="linkFailed">
               <p class="text-danger">
                 有効なトランザクションが存在しませんでした。<br>
@@ -133,12 +135,12 @@
 
 <script>
   import Modal from '~/components/Modal.vue'
-  import {mapMutations} from 'vuex'
 
   export default {
     components: {Modal},
     data() {
       return {
+        isLoading: false,
         login_username: '',
         login_password: '',
         register_username: '',
@@ -167,6 +169,7 @@
       },
       async login() {
         try {
+          this.isLoading = true
           await this.$auth.loginWith('local', {
             data: {
               username: this.login_username,
@@ -174,10 +177,12 @@
             }
           }).then((response) => {
             this.authUser = this.$auth.user
+            this.isLoading = false
           })
           this.authModal = false
         } catch (e) {
           this.error = true
+          this.isLoading = false
           // console.log(e)
         }
       },
@@ -186,12 +191,14 @@
       },
       registerUser() {
         var _this = this
+        this.isLoading = true
         this.$axios.post('/register', {
           username: this.register_username,
           password: this.register_password,
           password_confirm: this.register_password_confirm
         })
           .then((response) => {
+            _this.isLoading = false
             this.$auth.loginWith('local', {
               data: {
                 username: this.register_username,
@@ -208,14 +215,18 @@
       },
       async linkAccout() {
         var _this = this
+        _this.isLoading = true
         this.$axios.get('/link_account', {})
           .then((response) => {
             _this.$auth.fetchUser()
             _this.linkFailed = false
+            _this.isLoading = false
+            _this.linkModal = false
           })
           .catch(function (err) {
             console.log(err)
             _this.linkFailed = true
+            _this.isLoading = false
           })
       },
     },

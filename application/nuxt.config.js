@@ -83,6 +83,7 @@ export default {
 
   plugins: [
     { src: '~/plugins/vue-js-modal', ssr: false },
+    { src: '~/plugins/VueLoading', ssr: false },
     // { src: 'plugins/main.js'},
     // 'plugins/axios',
     // 'plugins/filter',

@@ -47,8 +47,6 @@
     },
     data() {
       return {
-        //debug
-        token: '78A1022CDE0F5059',
       }
     },
   }

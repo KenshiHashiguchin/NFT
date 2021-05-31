@@ -20,7 +20,16 @@
               <h3 class="text-left">{{ collection.title }}</h3>
               <p class="text-left">{{ collection.description }}</p>
               <div class="form-group mb-2">
-                <template v-if="!successBuy">
+                <template v-if="!$auth.loggedIn || !$auth.user.address">
+                  <label class="u-font-size-90 text-left"><b>送信メッセージ</b></label>
+                  <textarea v-model="message" type="message" name="password" class="form-control mb-5"
+                            placeholder="メッセージを入力してください。" disabled></textarea>
+                  <div class="form-group mb-2">
+                    <label class="u-font-size-90 text-left"><b>thanks量</b></label>
+                    <input v-model="amount" type="text" name="volume" class="form-control mb-3" placeholder="500" disabled>
+                  </div>
+                </template>
+                <template v-else-if="!successBuy">
                   <label class="u-font-size-90 text-left"><b>送信メッセージ</b></label>
                   <textarea v-model="message" type="message" name="password" class="form-control mb-5"
                             placeholder="メッセージを入力してください。"></textarea>
@@ -29,15 +38,17 @@
                     <input v-model="amount" type="text" name="volume" class="form-control mb-3" placeholder="500">
                   </div>
                 </template>
-                <div v-if="successBuy">
+                <div v-else-if="successBuy">
                   <p><b>ありがとうございます！</b></p>
                   <p>購入トランザクションを発行しました。</p>
                   <p>トランザクションに購入者とトークン所有者が署名することで、購入手続き完了となります。<br>(署名はウォレットから実施いただけます)</p>
                   <p>※他ユーザも購入手続きしている場合はよりthanks量の多い取引が優先される可能性がありますので、予めご了承ください。</p>
                 </div>
                 <p v-if="errors.amount">{{errors.amount}}</p>
-                <button v-if="successBuy" type="button" class="btn btn-block btn-dark mb-3" disabled>Success!!</button>
-                <button v-if="!successBuy" type="button" class="btn btn-block btn-dark mb-3" @click="buy">購入する</button>
+                <button v-if="!$auth.loggedIn" type="button" class="btn btn-block btn-dark mb-3" disabled>ログイン必須です</button>
+                <button v-else-if="!$auth.user.address" type="button" class="btn btn-block btn-dark mb-3" disabled>アドレス紐付け必須です</button>
+                <button v-else-if="successBuy" type="button" class="btn btn-block btn-dark mb-3" disabled>Success!!</button>
+                <button v-else-if="!successBuy" type="button" class="btn btn-block btn-dark mb-3" @click="buy">購入する</button>
               </div>
             </div>
           </div>
