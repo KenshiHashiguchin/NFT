@@ -121,10 +121,22 @@
         })
       },
       getOwnerAddress() {
-        let transactions = this.$getOwnerAddress(this.collection.token)
-        if (!transactions){
+        console.log("getOwnerAddress")
+        console.log(process.env.OWNER_ADDRESS)
+        this.$getOwnerAddress(this.collection.token, process.env.OWNER_ADDRESS).then((result) => {
+          console.log("return address")
+          console.log(result)
+          this.ownerId = result
+        }).catch(() => {
           this.ownerId = '@Aikawa'
-        }
+        })
+        // console.log("address")
+        // console.log(address)
+        // if (!address){
+        //   this.ownerId = '@Aikawa'
+        // }else{
+        //   this.ownerId = address
+        // }
       }
     },
     mounted() {

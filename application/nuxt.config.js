@@ -13,6 +13,8 @@ export default {
     browserBaseURL: process.env.BROWSER_BASE_URL,
     adminAddress: process.env.ADMIN_ADDRESS,
     nodeURL : process.env.SYMBOL_NODE_URL,
+    OWNER_ADDRESS: process.env.OWNER_ADDRESS,
+    OWNER_PUBLIC_KEY: process.env.OWNER_PUBLIC_KEY,
   },
   privateRuntimeConfig: {
     secret: process.env.SECRET_KEY,
@@ -21,6 +23,7 @@ export default {
     nodeURL : process.env.SYMBOL_NODE_URL,
     EXCHANGE_CURRENCY_MOSAIC_ID: process.env.EXCHANGE_CURRENCY_MOSAIC_ID,
     OWNER_ADDRESS: process.env.OWNER_ADDRESS,
+    OWNER_PUBLIC_KEY: process.env.OWNER_PUBLIC_KEY,
   },
   srcDir: 'client/',
   render: {
