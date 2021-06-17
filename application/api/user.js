@@ -218,8 +218,21 @@ async function getAuthUser(req) {
 
 }
 
-app.get('/username_by_address', async function (req, res) {
-  return "hoge"
+app.get('/id', async function (req, res) {
+  if(!req.query.address){
+    return res.status(404).json()
+  }
+  models.User.findOne({
+    where: {address: req.query.address},
+  }).then(function (user) {
+    if (!user) {
+      return res.status(404).json()
+    }
+    return res.status(200).json({"id": user.name})
+
+  }).catch(function(){
+    return res.status(404).json()
+  });
 })
 
 

@@ -66,7 +66,10 @@
       </div>
       <div class="row">
         <div class="col-lg-6 col-sm-6 col-md-6 text-center mb-7 mb-md-5">
-          <p class="text-left">Owner：{{ownerId}}</p>
+          <p class="text-left">
+            Owner：{{ ownerAddress }}
+            <span v-if="ownerId">(@{{ ownerId }})</span>
+          </p>
         </div>
         <div class="col-lg-6 col-sm-6 col-md-6 text-center mb-7 mb-md-5">
           <p class="text-left">Historic</p>
@@ -95,14 +98,31 @@
         token: '',
         errors: {},
         successBuy: false,
-        // successBuy: true,
         music: {
           title: '無題',
           artist: '無題',
           src: 'https://moeplayer.b0.upaiyun.com/aplayer/secretbase.mp3',
           pic: ''
         },
+        ownerAddress: '',
         ownerId: '',
+      }
+    },
+    watch: {
+      ownerAddress: async function (newValue, oldValue) {
+        console.log("watch")
+        console.log(newValue)
+        await this.$axios.$get('/id', {
+          params: {
+            // ここにクエリパラメータを指定する
+            address: this.ownerAddress
+          }
+        }).then((res) => {
+          this.ownerId = res.id
+        }).catch(() => {
+          this.ownerId = ''
+        })
+        console.log(this.ownerId)
       }
     },
     methods: {
@@ -120,28 +140,83 @@
           _this.errors = err.response.data.errors
         })
       },
-      getOwnerAddress() {
-        console.log("getOwnerAddress")
-        console.log(process.env.OWNER_ADDRESS)
-        this.$getOwnerAddress(this.collection.token, process.env.OWNER_ADDRESS).then((result) => {
-          console.log("return address")
-          console.log(result)
-          this.ownerId = result
-        }).catch(() => {
-          this.ownerId = '@Aikawa'
+      async getOwnerAddress(mosaicId, ownerAddress) {
+        const symbol_sdk = require('symbol-sdk');
+
+        const nodeUrl = 'http://ngl-dual-101.testnet.symboldev.network:3000';
+        const repositoryFactory = new symbol_sdk.RepositoryFactoryHttp(nodeUrl);
+        const transactionHttp = repositoryFactory.createTransactionRepository();
+        // const address = Address.createFromPublicKey(ownerPubKey);
+        const address = symbol_sdk.Address.createFromRawAddress(ownerAddress);
+
+        // const mosaic = new MosaicId(mosaicId)
+        const searchCriteria = {
+          group: symbol_sdk.TransactionGroup.Confirmed,
+          // group: TransactionGroup.Partial,
+          address,
+          // transferMosaicId: mosaic,
+          pageNumber: 1,
+          pageSize: 100,
+          type: [
+            symbol_sdk.TransactionType.AGGREGATE_BONDED,
+            symbol_sdk.TransactionType.AGGREGATE_COMPLETE,
+            symbol_sdk.TransactionType.TRANSFER
+          ],
+        };
+
+        await transactionHttp.search(searchCriteria).subscribe(
+          (page) => {
+            var data = page.data.reverse()
+
+            this.getOwnerAddressByTxs(data, mosaicId).then((address) => {
+                return address
+              }
+            ).catch(() => {
+              return null;
+            })
+          },
+          (err) => {
+            console.error(err)
+          },
+        );
+      },
+      async getOwnerAddressByTxs(txs, mosaicId) {
+        const symbol_sdk = require('symbol-sdk');
+        const nodeUrl = 'http://ngl-dual-101.testnet.symboldev.network:3000';
+        const repositoryFactory = new symbol_sdk.RepositoryFactoryHttp(nodeUrl);
+        const transactionHttp = repositoryFactory.createTransactionRepository();
+        txs.forEach((tx) => {
+          //アグリゲートトランザクション判定
+          if (tx.type === symbol_sdk.TransactionType.AGGREGATE_COMPLETE
+            || tx.type === symbol_sdk.TransactionType.AGGREGATE_BONDED) {
+
+            //アグリゲートの場合、内部トランザクションを再取得
+            transactionHttp.getTransaction(
+              tx.transactionInfo.hash,
+              symbol_sdk.TransactionGroup.Confirmed
+            ).subscribe(tx => {
+
+              // console.log("== aggregateTx ==")
+              //この関数を再帰的に呼び出し
+              this.getOwnerAddressByTxs(tx.innerTransactions, mosaicId);  //再帰呼び出し
+              // console.log("-----------------")
+            });
+          } else {
+            //ここに解析する処理を記述します。
+            // console.log(tx);
+            if (tx.type === symbol_sdk.TransactionType.TRANSFER) {
+              // console.log(tx.mosaics[0].id.toHex())
+              if (tx.mosaics[0].id.toHex() === mosaicId) {
+                this.ownerAddress = tx.recipientAddress.address
+              }
+            }
+          }
         })
-        // console.log("address")
-        // console.log(address)
-        // if (!address){
-        //   this.ownerId = '@Aikawa'
-        // }else{
-        //   this.ownerId = address
-        // }
       }
     },
     mounted() {
       this.music.src = this.collection.object_url
-      this.getOwnerAddress()
+      this.getOwnerAddress(this.collection.token, process.env.OWNER_ADDRESS)
     },
   }
 </script>
