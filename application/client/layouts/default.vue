@@ -239,7 +239,7 @@
 </script>
 <style lang="scss" scoped>
   .logo {
-    margin-right: calc(100% - 236px - 60px - 60px); //画像文と両脇のマージン分
+    margin-right: calc(100% - 140px - 60px - 60px);
   }
 
   .address {
