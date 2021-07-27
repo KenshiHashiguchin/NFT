@@ -33,22 +33,6 @@
         </div>
       </div>
     </div>
-    <div class="top-music">
-      <header class="w-md-50 mx-auto text-center mb-7">
-        <h1 class="h1 font-weight-light mb-1">Tickets</h1>
-        <hr class="my-7">
-      </header>
-      <div class="row">
-        <div v-for="ticket in tickets" class="col-sm-6 col-md-6 text-center mb-7 mb-md-0">
-          <nuxt-link v-bind:to="{name:'collection-token',params:{token:ticket.token}}">
-            <img class="u-box-shadow-lg img-fluid rounded-circle mt-1" src="/music_default.png" alt="Htmlstream">
-            <p><span class="text-right"><span class="badge badge-dark">{{ ticket.min_amount }}thanks ~</span></span>
-            </p>
-            <p>{{ ticket.title }}</p>
-          </nuxt-link>
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
