@@ -78,7 +78,7 @@ exports.exchangeNft = async function (ownerMosaicId, purchaserPublicKey, amount,
         symbol_sdk_1.UInt64.fromUint(0)
       )
     ],
-    symbol_sdk_1.PlainMessage.create('Aikawa NFT Market'),
+    symbol_sdk_1.PlainMessage.create('NFT Market'),
     networkType
   );
 

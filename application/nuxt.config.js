@@ -56,7 +56,7 @@ export default {
       //     property: 'og:image',
       //     content: 'https://www.yysportscity.com/og-img.jpg',
       // },
-      {property: 'og:title', content: 'Aikawa NFT Market'},
+      {property: 'og:title', content: 'NFT Market'},
       {
         property: 'og:description',
         content:
