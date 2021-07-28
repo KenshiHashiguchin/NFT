@@ -156,6 +156,10 @@ export default {
         collapseWhitespace: true,
       },
     },
+    babel: {
+      babelrc: false,
+      compact: false
+    }
     // build.templates local設定
     // templates: [
     //     {
