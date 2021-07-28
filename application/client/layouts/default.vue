@@ -16,6 +16,9 @@
           </a>
         </template>
       </div>
+      <div class="">
+        ※テストネット版
+      </div>
     </div>
     <div class="page-content">
       <template v-if="$auth.loggedIn">
@@ -73,8 +76,8 @@
           <form class="form-signin" @submit.prevent="registerUser">
             <input v-model="register_username" type="text" name="username" class="form-control" placeholder="ユーザ名">
             <p v-if="this.error.username">{{error.username}}</p>
-            <input v-model="register_password" type="text" name="password" class="form-control" placeholder="パスワード">
-            <input v-model="register_password_confirm" type="text" name="password_confirm" class="form-control"
+            <input v-model="register_password" type="password" name="password" class="form-control" placeholder="パスワード">
+            <input v-model="register_password_confirm" type="password" name="password_confirm" class="form-control"
                    placeholder="パスワード">
             <p v-if="this.error.password">{{error.password}}</p>
             <button type="button" class="btn btn-block btn-dark" @click="registerUser">登録する</button>
@@ -92,7 +95,7 @@
           </h5>
           <br>
           <div class="link_address">
-            <p><b>送信先アドレス</b></p>
+            <p><b>送信先アドレス</b>（テストネット）</p>
             <button type="button" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="top" title=""
                     data-original-title="Tooltip on top" @click="onCopy($config.adminAddress)">
               <span>{{ this.$config.adminAddress }}</span><img @click="onCopy($config.adminAddress)" src="/copy.png">
@@ -111,6 +114,7 @@
               送信元のアドレスはユーザー名にリンクされ、すべてのNFTトランザクションが処理されます。<br>
               これは秘密鍵をインポートすることなく、またメールアドレスを使用することなく完全に分散化された登録手段です。<br>
               <span class="text-danger">※トランザクションを送信するにはSymbolウォレットが必要です。</span>
+              <span class="text-danger">※現在テスト環境のため、テストネットでご使用いただけます。</span>
             </p>
           </div>
           <hr>
