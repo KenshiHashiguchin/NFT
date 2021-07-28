@@ -90,3 +90,5 @@ services:
       STAGE: production
     volumes:
       - ./org-chimata-ssl-certs:/var/lib/https-portal
+    depends_on:
+      - nginx
