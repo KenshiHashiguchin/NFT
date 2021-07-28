@@ -17,7 +17,7 @@
         </template>
       </div>
       <div class="">
-        ※テストネット版
+        <p>※テストネット版(使用したい方は<a :href="this.mailLink" class="links">こちら</a>から)</p>
       </div>
     </div>
     <div class="page-content">
@@ -163,9 +163,16 @@
         linkModal: false,
         linkFailed: false,
         nft: [],
+        mailTo: "hashiguchi.dev@gmail.com",
+        mailSubject: "NFT Marketの使用希望",
+        mailContent: "Symbolを基盤とした独自コイン(thanksコイン)を決済に使用しております。%0D%0A試しに使用したい方はSymbolアドレスを記載し、当メールを送信してください。%0D%0A後日、コインを送付させていただきます。",
       }
     },
-    computed: {},
+    computed: {
+      mailLink () {
+        return 'mailto:' + this.mailTo + '?subject=' + this.mailSubject + '&body=' + this.mailContent
+      },
+    },
     methods: {
       onCopy(val) {
         this.$copyText(val)
