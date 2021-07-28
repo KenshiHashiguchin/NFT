@@ -129,14 +129,7 @@ export default {
     'nuxt-clipboard2', //https://qiita.com/at-946/items/aea8ac9938d810feae7b
     '@nuxtjs/auth',
     '@nuxtjs/axios',
-    // '@nuxtjs/dayjs',
-    // [
-    //     'cookie-universal-nuxt',
-    //     {
-    //         parseJSON: false,
-    //     },
-    // ],
-    // ['nuxt-webfontloader'],
+    'bootstrap-vue/nuxt',
   ],
   dayjs: {
     locales: ['ja'],
