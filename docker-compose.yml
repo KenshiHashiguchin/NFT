@@ -79,3 +79,14 @@ services:
       - backend
     depends_on:
       - mysql
+  https-portal:
+    image: steveltn/https-portal:1
+    ports:
+      - "80:80"
+      - "443:443"
+    restart: always
+    environment:
+      DOMAINS: 'symbol-nft.testnet.waitfull.com -> http://nginx:80'
+      STAGE: production
+    volumes:
+      - ./org-chimata-ssl-certs:/var/lib/https-portal
