@@ -11,7 +11,6 @@ volumes:
 services:
   ### NGINX Server #########################################
   nginx:
-    container_name: nft-nginx
     build:
       context: .
       dockerfile: ./containers/nginx/Dockerfile
@@ -88,7 +87,7 @@ services:
     links:
       - nginx
     environment:
-      DOMAINS: 'symbol-nft.testnet.waitfull.com -> http://nft-nginx:8080'
+      DOMAINS: 'symbol-nft.testnet.waitfull.com -> http://nginx:8080'
       STAGE: production
     volumes:
       - ./org-chimata-ssl-certs:/var/lib/https-portal
