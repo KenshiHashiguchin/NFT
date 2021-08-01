@@ -92,3 +92,5 @@ services:
       VIRTUAL_PORT: "8080"
     volumes:
       - ./org-chimata-ssl-certs:/var/lib/https-portal
+    networks:
+      - backend
