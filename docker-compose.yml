@@ -88,7 +88,7 @@ services:
     links:
       - nginx
     environment:
-      DOMAINS: 'symbol-nft.testnet.waitfull.com -> http://nginx:8080'
+      DOMAINS: 'symbol-nft.testnet.waitfull.com -> http://localhost:8080'
       STAGE: staging
     volumes:
       - ./org-chimata-ssl-certs:/var/lib/https-portal
