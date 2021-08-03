@@ -9,7 +9,8 @@ export default {
   //   // gameStartWeek: envSet.gameStartWeek,
   // },
   publicRuntimeConfig: { //this.$config.HOGE or $config.HOGE
-    baseURL: process.env.BASE_URL || 'http://locahost:8080',
+    // baseURL: process.env.BASE_URL || 'http://locahost:8080',
+    baseURL: process.env.BASE_URL,
     browserBaseURL: process.env.BROWSER_BASE_URL,
     adminAddress: process.env.ADMIN_ADDRESS,
     nodeURL : process.env.SYMBOL_NODE_URL,
