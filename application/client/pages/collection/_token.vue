@@ -182,7 +182,7 @@
       },
       async getOwnerAddressByTxs(txs, mosaicId) {
         const symbol_sdk = require('symbol-sdk');
-        const nodeUrl = 'http://ngl-dual-101.testnet.symboldev.network:3000';
+        const nodeUrl = 'https://izanami.tsvr.net:3001';
         const repositoryFactory = new symbol_sdk.RepositoryFactoryHttp(nodeUrl);
         const transactionHttp = repositoryFactory.createTransactionRepository();
         txs.forEach((tx) => {
