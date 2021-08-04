@@ -219,7 +219,7 @@
     },
     mounted() {
       this.music.src = this.collection.object_url
-      this.ownerId = process.env.OWNER_ADDRESS+'(発行者)';
+      this.ownerId = process.env.OWNER_ADDRESS;
       this.getOwnerAddress(this.collection.token, process.env.OWNER_ADDRESS)
     },
   }
