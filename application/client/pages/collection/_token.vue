@@ -69,8 +69,8 @@
           <p class="text-left">
             Owner：{{ ownerAddress }}
           </p>
-          <p class="text-left" v-if="ownerId">(@{{ ownerId }})</p>
-          <p class="text-left" v-else-if="ownerAddress === issueAddress">(発行者)</p>
+          <p class="text-left" v-if="ownerAddress === issueAddress">(発行者)</p>
+          <p class="text-left" v-else-if="ownerId">(@{{ ownerId }})</p>
           <p class="text-left" v-else>(アカウント未登録者)</p>
         </div>
         <div class="col-lg-6 col-sm-6 col-md-6 text-center mb-7 mb-md-5">
