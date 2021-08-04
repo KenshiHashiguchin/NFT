@@ -68,8 +68,10 @@
         <div class="col-lg-6 col-sm-6 col-md-6 text-center mb-7 mb-md-5">
           <p class="text-left">
             Owner：{{ ownerAddress }}
-            <span v-if="ownerId">(@{{ ownerId }})</span>
           </p>
+          <p class="text-left" v-if="ownerId">(@{{ ownerId }})</p>
+          <p class="text-left" v-else-if="ownerAddress === process.env.OWNER_ADDRESS">(発行者)</p>
+          <p class="text-left" v-else>(アカウント未登録者)</p>
         </div>
         <div class="col-lg-6 col-sm-6 col-md-6 text-center mb-7 mb-md-5">
           <p class="text-left">Historic</p>
@@ -104,7 +106,7 @@
           src: 'https://moeplayer.b0.upaiyun.com/aplayer/secretbase.mp3',
           pic: ''
         },
-        ownerAddress: '',
+        ownerAddress: process.env.OWNER_ADDRESS,
         ownerId: '',
       }
     },
@@ -216,6 +218,7 @@
     },
     mounted() {
       this.music.src = this.collection.object_url
+      this.ownerId = process.env.OWNER_ADDRESS+'(発行者)';
       this.getOwnerAddress(this.collection.token, process.env.OWNER_ADDRESS)
     },
   }
